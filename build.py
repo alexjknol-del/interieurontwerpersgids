@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Generator voor interieurontwerpersgids.be. Geen dependencies. Bouwt dist/."""
 import os, shutil, html, datetime, re, json
-from content import SITE, CHAPTERS, OVER
+from content import SITE, CHAPTERS, OVER, BLOGS
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist")
 TODAY = datetime.date.today().isoformat()
@@ -97,7 +97,7 @@ def linkify(text):
     out.append(_bare(text[pos:]))
     return "".join(out)
 
-NAV = [("/", "Start"), ("/hoofdstukken/", "Hoofdstukken"), ("/over/", "Over de gids"), ("/contact/", "Contact")]
+NAV = [("/", "Start"), ("/hoofdstukken/", "Hoofdstukken"), ("/blog/", "Blog"), ("/over/", "Over de gids"), ("/contact/", "Contact")]
 
 def navlinks(active):
     return "".join('<a href="%s"%s>%s</a>' % (h, ' class="on"' if h == active else "", t) for h, t in NAV)
@@ -142,7 +142,7 @@ def layout(title, meta, body, path, active="", active_slug="", extra_head=""):
 %s
 <footer>
 <div>&copy; %s Interieurontwerpersgids.be</div>
-<div><a href="/over/">Over de gids</a><a href="/contact/">Contact</a><a href="/privacybeleid/">Privacybeleid</a><a href="/cookiebeleid/">Cookiebeleid</a><a href="/sitemap.xml">Sitemap</a></div>
+<div><a href="/over/">Over de gids</a><a href="/blog/">Blog</a><a href="/contact/">Contact</a><a href="/privacybeleid/">Privacybeleid</a><a href="/cookiebeleid/">Cookiebeleid</a><a href="/sitemap.xml">Sitemap</a></div>
 </footer>
 </main>
 </body>
@@ -219,6 +219,32 @@ def chapter(i, c):
     ttl = "%s | Interieurontwerpersgids.be" % c["title"]
     write("/hoofdstukken/%s/" % c["slug"], layout(ttl, c["meta"], body, "/hoofdstukken/%s/" % c["slug"], "/hoofdstukken/", c["slug"], schema))
 
+def _blog_src(b):
+    lines = [l.rstrip("\n") for l in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "blog", b["file"]), encoding="utf-8") if l.strip()]
+    h1, o, ul = lines[0][2:].strip(), [], []
+    def flush():
+        if ul: o.append("<ul>" + "".join("<li>%s</li>" % linkify(x) for x in ul) + "</ul>"); ul.clear()
+    for l in lines[1:]:
+        if l.startswith("- "): ul.append(l[2:]); continue
+        flush()
+        if l.startswith("## "): o.append("<h2>%s</h2>" % esc(l[3:]))
+        else: o.append("<p>%s</p>" % linkify(l))
+    flush()
+    return h1, "\n".join(o)
+
+def blog_index():
+    rows = "".join('<a class="row" href="/blog/%s/"><span class="n">%s</span><span class="f">Blog</span><span><span class="t" style="display:block">%s</span><span class="d" style="display:block">%s</span></span><span class="go">Lees de blog</span></a>'
+                   % (b["slug"], b["datum_kort"], esc(b["mt"]), esc(b["meta"])) for b in BLOGS)
+    body = '<div class="pad"><p class="mono">Blog</p><h1>Blog</h1><p class="lede">Bijdragen over bouwen, wonen en alles wat in en rond een interieur samenkomt.</p><div class="reg">%s</div></div>' % rows
+    write("/blog/", layout("Blog | Interieurontwerpersgids.be", "Blogs op Interieurontwerpersgids.be over bouwen, wonen en inrichten, van bouwen in Amsterdam tot villa's op Bali en de keuken.", body, "/blog/", "/blog/"))
+
+def blog_page(b):
+    h1, inner = _blog_src(b)
+    body = '<div class="pad"><div class="text"><p class="mono"><a href="/blog/">Blog</a> / %s</p><h1>%s</h1>%s</div></div>' % (b["datum_nl"], esc(h1), inner)
+    schema = '<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":%s,"description":%s,"inLanguage":"nl-BE","datePublished":"%s","mainEntityOfPage":"%s","publisher":{"@type":"Organization","name":"Interieurontwerpersgids.be","url":"%s"}}</script>' % (
+        _j(h1), _j(b["meta"]), b["datum"], SITE["url"] + "/blog/%s/" % b["slug"], SITE["url"])
+    write("/blog/%s/" % b["slug"], layout(b["mt"], b["meta"], body, "/blog/%s/" % b["slug"], "/blog/", "", schema))
+
 def simple(path, title, meta, h1, inner, active=""):
     body = '<div class="pad"><div class="text"><h1>%s</h1>%s</div></div>' % (esc(h1), inner)
     write(path, layout(title, meta, body, path, active))
@@ -259,7 +285,7 @@ def notfound():
     open(os.path.join(OUT, "404.html"), "w", encoding="utf-8").write(layout("Pagina niet gevonden | Interieurontwerpersgids.be", "Deze pagina bestaat niet.", body, "/404.html"))
 
 def extras():
-    urls = ["/", "/hoofdstukken/", "/over/", "/contact/", "/privacybeleid/", "/cookiebeleid/"] + ["/hoofdstukken/%s/" % c["slug"] for c in CHAPTERS]
+    urls = ["/", "/hoofdstukken/", "/over/", "/contact/", "/privacybeleid/", "/cookiebeleid/", "/blog/"] + ["/hoofdstukken/%s/" % c["slug"] for c in CHAPTERS] + ["/blog/%s/" % b["slug"] for b in BLOGS]
     open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
             "<url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n" % (SITE["url"], u, TODAY) for u in urls) + "</urlset>\n")
@@ -272,7 +298,9 @@ def main():
     os.makedirs(OUT)
     home(); index()
     for i, c in enumerate(CHAPTERS): chapter(i, c)
-    over(); contact(); privacy(); cookies(); notfound(); extras()
+    over(); contact(); blog_index()
+    for b in BLOGS: blog_page(b)
+    privacy(); cookies(); notfound(); extras()
     print("gebouwd:", sum(len(f) for _, _, f in os.walk(OUT)), "bestanden")
 
 if __name__ == "__main__":

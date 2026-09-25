@@ -288,3 +288,17 @@ OVER = {
         "Opmerkingen en vragen over de inhoud zijn welkom op info@interieurontwerpersgids.be.",
     ],
 }
+
+
+# Blogs van externe auteurs; brontekst staat in blog/<file>.
+BLOGS = [
+    {"slug": "bouwen-in-amsterdam", "file": "bouwen-in-amsterdam.txt", "datum": "2026-09-25", "datum_nl": "25 september 2026", "datum_kort": "25.09",
+     "mt": "Bouwen in Amsterdam: van luxe woningbouw tot duurzaam",
+     "meta": "De rol van een aannemer in Amsterdam, luxe woningbouw en maatwerk, restauratie van historische panden, het bouwteam en duurzaam bouwen in de hoofdstad."},
+    {"slug": "spiraalkneder-voor-thuisbakkers", "file": "spiraalkneder.txt", "datum": "2026-09-25", "datum_nl": "25 september 2026", "datum_kort": "25.09",
+     "mt": "Spiraalkneder voor thuisbakkers: werking en kenmerken",
+     "meta": "Wat een spiraalkneder is, hoe het apparaat werkt, welke capaciteit past bij een thuisbakker en het verschil met een standaard keukenmixer."},
+    {"slug": "canggu-bali-luxe-wonen-en-investeren", "file": "canggu.txt", "datum": "2026-09-25", "datum_nl": "25 september 2026", "datum_kort": "25.09",
+     "mt": "Canggu op Bali: luxe wonen en investeren in villa's",
+     "meta": "Luxe wonen in Canggu op Bali: villa's en hun architectuur, rendement en bezettingsgraad, de wijken en wat luxe kopers van een villa verwachten."},
+]

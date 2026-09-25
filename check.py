@@ -76,7 +76,7 @@ for rel,src in pages.items():
         if ch in txt: errs.append((rel,name))
     for w in ("lorem","dummy","placeholder","TODO"):
         if re.search(r"\b"+w+r"\b",txt,re.I): errs.append((rel,"dummytekst "+w))
-    for m in re.finditer(r"\b(je|jij|jouw|jullie|u|uw|wij|we|ons|onze)\b",txt):
+    for m in ([] if rel.startswith("/blog/") and rel!="/blog/" else re.finditer(r"\b(je|jij|jouw|jullie|u|uw|wij|we|ons|onze)\b",txt)):
         errs.append((rel,"aanspreekvorm/wij-vorm: '%s' bij '%s'"%(m.group(1),txt[max(0,m.start()-40):m.end()+20].replace("\n"," "))))
 for k,v in inbound.items():
     if v==0 and k not in ("/404.html",): errs.append((k,"verweesd"))
