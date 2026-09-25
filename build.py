@@ -84,8 +84,18 @@ def sid(s): return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
 def ext(url, anchor):
     return '<a href="%s" target="_blank" rel="noopener">%s</a>' % (url, esc(anchor))
 
-def linkify(text):
+def _bare(text):
     return re.sub(r"https?://[^\s<>\"')]+(?<![.,])", lambda m: ext(m.group(0), m.group(0)), esc(text))
+
+def linkify(text):
+    # [ankertekst](https://...) wordt een link met die ankertekst, kale URL's blijven kale links
+    out, pos = [], 0
+    for m in re.finditer(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", text):
+        out.append(_bare(text[pos:m.start()]))
+        out.append(ext(m.group(2), m.group(1)))
+        pos = m.end()
+    out.append(_bare(text[pos:]))
+    return "".join(out)
 
 NAV = [("/", "Start"), ("/hoofdstukken/", "Hoofdstukken"), ("/over/", "Over de gids"), ("/contact/", "Contact")]
 
