@@ -292,6 +292,9 @@ OVER = {
 
 # Blogs van externe auteurs; brontekst staat in blog/<file>.
 BLOGS = [
+    {"slug": "daglicht-via-het-dak", "file": "daglicht-via-het-dak.txt", "datum": "2026-09-27", "datum_nl": "27 september 2026", "datum_kort": "27.09",
+     "mt": "Daglicht via het dak: lichtkoepels en dakramen in het interieur",
+     "meta": "Hoe lichtkoepels en dakramen het interieur veranderen, welke keuzes een ontwerper maakt en waarom de aansluiting op het dak de levensduur bepaalt."},
     {"slug": "bouwen-in-amsterdam", "file": "bouwen-in-amsterdam.txt", "datum": "2026-09-25", "datum_nl": "25 september 2026", "datum_kort": "25.09",
      "mt": "Bouwen in Amsterdam: van luxe woningbouw tot duurzaam",
      "meta": "De rol van een aannemer in Amsterdam, luxe woningbouw en maatwerk, restauratie van historische panden, het bouwteam en duurzaam bouwen in de hoofdstad."},
