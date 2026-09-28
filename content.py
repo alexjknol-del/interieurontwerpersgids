@@ -292,6 +292,12 @@ OVER = {
 
 # Blogs van externe auteurs; brontekst staat in blog/<file>.
 BLOGS = [
+    {"slug": "ontwerpen-voor-tijdelijk-wonen", "file": "ontwerpen-voor-tijdelijk-wonen.txt", "datum": "2026-09-28", "datum_nl": "28 september 2026", "datum_kort": "28.09",
+     "mt": "Ontwerpen voor tijdelijk wonen en korte bewoning",
+     "meta": "Een interieur plannen voor tijdelijke bewoning: briefing zonder vaste bewoner, plattegrond, robuuste materialen, lichtplan en uitvoering op schaal."},
+    {"slug": "uitschuifbare-japandi-eettafel", "file": "uitschuifbare-japandi-eettafel.txt", "datum": "2026-09-28", "datum_nl": "28 september 2026", "datum_kort": "28.09",
+     "mt": "Uitschuifbare japandi eettafel: flexibel en rustig",
+     "meta": "Waarom een uitschuifbare eettafel past bij japandi, welke constructie het verschil maakt, hoe het blad één geheel blijft en welk onderhoud erbij hoort."},
     {"slug": "daglicht-via-het-dak", "file": "daglicht-via-het-dak.txt", "datum": "2026-09-27", "datum_nl": "27 september 2026", "datum_kort": "27.09",
      "mt": "Daglicht via het dak: lichtkoepels en dakramen in het interieur",
      "meta": "Hoe lichtkoepels en dakramen het interieur veranderen, welke keuzes een ontwerper maakt en waarom de aansluiting op het dak de levensduur bepaalt."},
