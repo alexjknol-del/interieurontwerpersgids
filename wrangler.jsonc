@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "interieurontwerpersgids",
+  "compatibility_date": "2026-09-28",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "interieurontwerpersgids.be", "custom_domain": true },
+    { "pattern": "www.interieurontwerpersgids.be", "custom_domain": true }
+  ]
+}
